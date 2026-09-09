@@ -28,8 +28,9 @@ async function loadData() {
         let cursor = await collection.find({});
         let documents = await cursor.toArray();
 
-        if(documents.length == 0) {
+        if(documents.length != 16) {
             // Insert data into the collection
+            await collection.drop()
             const insertResult = await collection.insertMany(data);
             console.log('Inserted documents:', insertResult.insertedCount);
         } else {
