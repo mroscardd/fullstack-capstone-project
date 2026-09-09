@@ -60,6 +60,6 @@ h1, h2, .lead, .btn-primary {
 .btn-primary {
     width: fit-content;
     border-radius: 20px;
+    font-weight: bold;
 }
     
-
