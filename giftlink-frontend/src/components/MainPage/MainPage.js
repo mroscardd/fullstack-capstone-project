@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {urlConfig} from '../../config';
 
+
 function MainPage() {
     const [gifts, setGifts] = useState([]);
     const navigate = useNavigate();
@@ -41,6 +42,7 @@ function MainPage() {
     };
 
     return (
+        <>
         <div className="container mt-5">
             <div className="row">
                 {gifts.map((gift) => (
@@ -76,6 +78,7 @@ function MainPage() {
                 ))}
             </div>
         </div>
+    </>
     );
 }
 
