@@ -8,6 +8,7 @@ const connectToDatabase = require('./models/db');
 
 
 
+
 const app = express();
 
 
@@ -25,6 +26,7 @@ app.use(express.json());
 
 const giftRoutes = require('./routes/giftRoutes')
 const searchRoutes = require('./routes/searchRoutes')
+const authRoutes = require('./routes/authRoutes')
 
 
 const pinoHttp = require('pino-http');
@@ -35,6 +37,7 @@ app.use(pinoHttp({ logger }));
 
 app.use('/api/gifts', giftRoutes)
 app.use('/api/search', searchRoutes)
+app.use('/api/auth', authRoutes)
 
 
 // Global Error Handler
