@@ -70,7 +70,7 @@ router.post('/login', async (req, res) => {
         const collection = db.collection("users");
 
         const existingUser = await collection.findOne({email: email})
-
+    
         if (!existingUser) {
             return res.status(401).json({error: "This user has not been registered"})
         }
@@ -79,7 +79,9 @@ router.post('/login', async (req, res) => {
 
         if (pass) {
             const userName = existingUser.firstName
-            const userEmail = existingUser.lastName
+            
+            const userEmail = existingUser.email
+            
 
             let payload = {
                 user: {

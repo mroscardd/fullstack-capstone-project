@@ -56,6 +56,9 @@ export default function Navbar() {
             {isLoggedIn ? (
                                     <>
                                     <li className="nav-item"> <span className="nav-link" style={{color: "black", cursor:"pointer"}} onClick={profileSecton}>Welcome, {userName}</span> </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link register-btn" to="/app/profile">Profile</Link>
+                                      </li>
                                     <li className="nav-item"><button className="nav-link login-btn" onClick={handleLogout}>Logout</button></li>
                                     </>
                                     )  : (
@@ -67,6 +70,7 @@ export default function Navbar() {
                                         <li className="nav-item">
                                         <Link className="nav-link register-btn" to="/app/register">Register</Link>
                                         </li>
+                                        
                                     </>
                                 )
 
