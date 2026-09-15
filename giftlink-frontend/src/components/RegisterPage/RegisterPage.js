@@ -54,8 +54,6 @@ function RegisterPage() {
                 setError(json.error)
             }
 
-
-
         } catch (error) {
             console.log("Fetch error: " + error)
         }
