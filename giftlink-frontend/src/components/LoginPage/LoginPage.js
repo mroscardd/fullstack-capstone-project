@@ -29,7 +29,8 @@ function LoginPage() {
         setFormLogin({...formLogin, [propiedad]: element})
     }    
 
-    const handleLogin = async () => {
+    const handleLogin = async (e) => {
+        e.preventDefault()
 	try{
 		//first task
       const response = await fetch(`${urlConfig.backendUrl}/api/auth/login`, {
@@ -72,7 +73,7 @@ function LoginPage() {
     return (
         <div className="environment">
             <div className="container-form">
-                <form type="submit">
+                <form onSubmit={handleLogin}>
                     <h2>Login</h2>
                     
                     <label htmlFor="login-email">Email</label>
@@ -93,7 +94,7 @@ function LoginPage() {
                         onChange={(e) => handleChange("password", e)}
                         value={formLogin.password}
                     />
-                    <button className="btn-primary btnForm" onSubmit={handleLogin}>Register</button>
+                    <button type="submit" className="btn-primary btnForm">Login</button>
                     <p className="mt-4 text-center">
                         ¿Ya eres miembro? <a href="/app/login" className="text-primary">Iniciar sesión</a>
                     </p>
