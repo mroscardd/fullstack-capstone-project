@@ -15,11 +15,12 @@ const Profile = () => {
   const navigate = useNavigate();
   
 
-  const fetchUserProfile = async () => {
+  const fetchUserProfile = () => {
     try {
       const authtoken = sessionStorage.getItem("auth-token");
       const email = sessionStorage.getItem("email");
-      const name=sessionStorage.getItem('name');
+      const name= sessionStorage.getItem('name');
+
       if (name || authtoken) {
                 const storedUserDetails = {
                   name: name,
@@ -28,12 +29,16 @@ const Profile = () => {
 
                 setUserDetails(storedUserDetails);
                 setUpdatedDetails(storedUserDetails);
+                
               }
 } catch (error) {
   console.error(error);
-  // Handle error case
 }
 };
+
+useEffect(() => fetchUserProfile(), [])
+
+
 
 const handleEdit = () => {
 setEditMode(true);
