@@ -5,6 +5,7 @@ const logger = require('../logger');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+
 require('dotenv').config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -55,5 +56,47 @@ router.post('/register', async (req, res) => {
     return res.status(500).json({ error: e.message, stack: e.stack });
 }
 });
+
+
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password} = req.body
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
+        const db = await connectToDatabase();
+        const collection = db.collection("users");
+
+        const existingUser = await collection.findOne({email: email})
+
+        if (!existingUser) {
+            return res.status(401).json({error: "This user has not been registered"})
+        }
+
+        const pass = await bcryptjs.compare(password, existingUser.password)
+
+        if (pass) {
+            const userName = existingUser.firstName
+            const userEmail = existingUser.lastName
+
+            let payload = {
+                user: {
+                    id: existingUser._id.toString(),
+                },
+            }
+            const authtoken = jwt.sign(payload, JWT_SECRET)
+            return res.status(200).json({ authtoken, userName, userEmail });
+
+        } else {
+            logger.error('User not found');
+		    return res.status(401).json({ error: 'User not found' });
+        }
+
+    } catch (error) {
+        logger.error(error)
+        return res.status(500).json({ error: 'Server problem' });
+    }
+})
 
 module.exports = router;
