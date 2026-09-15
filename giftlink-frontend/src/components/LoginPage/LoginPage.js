@@ -26,7 +26,7 @@ function LoginPage() {
                 <form type="submit">
                     <h2>Login</h2>
                     
-                    <label for="login-email">Email</label>
+                    <label htmlFor="login-email">Email</label>
                     <input
                         type="email"
                         id="login-email"
@@ -35,7 +35,7 @@ function LoginPage() {
                         onChange={(e) => handleChange("email", e)}
                         value={formLogin.email}
                     />
-                    <label for="password">Password</label>
+                    <label htmlFor="password">Password</label>
                     <input
                         type="password"
                         id="login-password"

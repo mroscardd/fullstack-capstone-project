@@ -1,5 +1,9 @@
 import './RegisterPage.css'
 import { useState } from "react";
+import { urlConfig } from  '../../config'
+import { useAppContext } from '../../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
+
 
 
 function RegisterPage() {
@@ -11,6 +15,18 @@ function RegisterPage() {
             password: ""
         }
     )
+    const navigate =  useNavigate()
+    const { setIsLoggedIn } = useAppContext()
+    const [error, setError] = useState("")
+    const fetchConfig = { method: 'POST',
+             headers: {'Content-Type': 'application/json'},  
+             body: JSON.stringify({
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                password: formData.password
+            })
+            }
 
 
     const handleChange = (propiedad, e) => {
@@ -18,17 +34,42 @@ function RegisterPage() {
         setFormData({...formData, [propiedad]: element})
     }    
 
-    const handleRegister = (e) => {
+    const handleRegister = async(e) => {
         e.preventDefault()
-        console.log("Register invoked")
+        try {
+            const response  = await fetch(`${urlConfig.backendUrl}/api/auth/register`, fetchConfig)
+            
+            const json = await response.json()
+            console.log('json data:', json);
+			console.log('er: ', json.error)
+
+            if (json.authtoken) {
+            sessionStorage.setItem('auth-token', json.authtoken);
+            sessionStorage.setItem('name', formData.firstName);
+            sessionStorage.setItem('email', json.email);
+			setIsLoggedIn(true)
+			navigate('/app')
+            }
+            if (json.error) {
+                setError(json.error)
+            }
+
+
+
+        } catch (error) {
+            console.log("Fetch error: " + error)
+        }
+        
+        
+
     }
    
     return (
         <div className="environment">
             <div className="container-form">
-                <form type="submit">
+                <form onSubmit={handleRegister}>
                     <h2>Register</h2>
-                    <label for="firstName">FirstName</label>
+                    <label htmlFor="firstName">FirstName</label>
                     <input
                         type="text"
                         id="firstName"
@@ -37,7 +78,7 @@ function RegisterPage() {
                         onChange={(e) => handleChange("firstName", e)}
                         value={formData.firstName}
                     />
-                    <label for="LastName">LastName</label>
+                    <label htmlFor="LastName">LastName</label>
                     <input
                         type="text"
                         id="lastName"
@@ -46,7 +87,7 @@ function RegisterPage() {
                         onChange={(e) => handleChange("lastName", e)}
                         value={formData.lastName}
                     />
-                    <label for="email">Email</label>
+                    <label htmlFor="email">Email</label>
                     <input
                         type="email"
                         id="email"
@@ -55,7 +96,7 @@ function RegisterPage() {
                         onChange={(e) => handleChange("email", e)}
                         value={formData.email}
                     />
-                    <label for="password">Password</label>
+                    <label htmlFor="password">Password</label>
                     <input
                         type="password"
                         id="password"
@@ -64,8 +105,9 @@ function RegisterPage() {
                         onChange={(e) => handleChange("password", e)}
                         value={formData.password}
                     />
-                    <button className="btn-primary btnForm" onSubmit={handleRegister}>Register</button>
+                    <button type="submit" className="btn-primary btnForm">Register</button>
                 </form>
+               <div className="text-danger">{error}</div>
             </div>
         </div>    
     )
