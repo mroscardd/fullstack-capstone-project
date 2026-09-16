@@ -19,7 +19,7 @@ router.post('/register', async (req, res) => {
 
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required" });
-        };
+        }
 
         const db = await connectToDatabase();
         const collection = db.collection("users");
@@ -109,14 +109,14 @@ router.put('/update', async (req, res) => {
     if (!errors.isEmpty()) {
         logger.error('Validation errors in update request', errors.array());
         return res.status(400).json({ errors: errors.array() });
-    };
+    }
 
     try {
         const { email } = req.headers;
         if (!email) {
             logger.error('Email not found in the request headers');
             return res.status(400).json({error:"Email not found in the request headers"});
-        };
+        }
 
         const db = await connectToDatabase();
         const collection = db.collection("users");
@@ -125,7 +125,7 @@ router.put('/update', async (req, res) => {
         if (!user) {
             logger.error('User not found');
             return res.status(404).json({ error: "User not found" });
-        };
+        }
 
     
 
