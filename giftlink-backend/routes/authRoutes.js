@@ -1,3 +1,5 @@
+/*jshint esversion: 8 */
+
 const express = require('express');
 const router = express.Router();
 const connectToDatabase = require('../models/db');
@@ -17,7 +19,7 @@ router.post('/register', async (req, res) => {
 
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required" });
-        }
+        };
 
         const db = await connectToDatabase();
         const collection = db.collection("users");
@@ -61,7 +63,7 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     try {
-        const { email, password} = req.body
+        const { email, password} = req.body;
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required" });
         }
@@ -69,26 +71,26 @@ router.post('/login', async (req, res) => {
         const db = await connectToDatabase();
         const collection = db.collection("users");
 
-        const existingUser = await collection.findOne({email: email})
+        const existingUser = await collection.findOne({email: email});
     
         if (!existingUser) {
             return res.status(401).json({error: "This user has not been registered"})
         }
 
-        const pass = await bcryptjs.compare(password, existingUser.password)
+        const pass = await bcryptjs.compare(password, existingUser.password);
 
         if (pass) {
-            const userName = existingUser.firstName
+            const userName = existingUser.firstName;
             
-            const userEmail = existingUser.email
+            const userEmail = existingUser.email;
             
 
             let payload = {
                 user: {
                     id: existingUser._id.toString(),
                 },
-            }
-            const authtoken = jwt.sign(payload, JWT_SECRET)
+            };
+            const authtoken = jwt.sign(payload, JWT_SECRET);
             return res.status(200).json({ authtoken, userName, userEmail });
 
         } else {
@@ -97,52 +99,52 @@ router.post('/login', async (req, res) => {
         }
 
     } catch (error) {
-        logger.error(error)
+        logger.error(error);
         return res.status(500).json({ error: 'Server problem' });
     }
 })
 
 router.put('/update', async (req, res) => {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        logger.error('Validation errors in update request', errors.array())
+        logger.error('Validation errors in update request', errors.array());
         return res.status(400).json({ errors: errors.array() });
-    }
+    };
 
     try {
-        const { email } = req.headers
+        const { email } = req.headers;
         if (!email) {
             logger.error('Email not found in the request headers');
-            return res.status(400).json({error:"Email not found in the request headers"})
-        }
+            return res.status(400).json({error:"Email not found in the request headers"});
+        };
 
         const db = await connectToDatabase();
         const collection = db.collection("users");
-		const user = await collection.findOne({ email })
+		const user = await collection.findOne({ email });
 
         if (!user) {
             logger.error('User not found');
             return res.status(404).json({ error: "User not found" });
-        }
+        };
 
     
 
        const userData = {
         updatedAt: new Date(),
         firstName: req.body.name
-        }
+        };
 
         
        const updateUser = await collection.findOneAndUpdate(
             {email}, { $set: userData }, { returnDocument: 'after' }
-        )
+        );
 		let payload = {
                 user: {
                     id: updateUser._id.toString(),
                 },
-            }
-        const authtoken = jwt.sign(payload, JWT_SECRET)
-        logger.info('User updated successfully')
+            };
+        const authtoken = jwt.sign(payload, JWT_SECRET);
+        logger.info('User updated successfully');
         res.status(200).json({ authtoken });
     } catch (e) {
          return res.status(500).send('Internal server error' + e);
