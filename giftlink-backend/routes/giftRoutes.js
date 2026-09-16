@@ -1,17 +1,17 @@
 /*jshint esversion: 8 */
 
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 const connectToDatabase = require('../models/db');
-const logger = require('../logger')
+const logger = require('../logger');
 
 router.get('/', async (req, res) => {
     try {
-        const db = await connectToDatabase()
+        const db = await connectToDatabase();
 
-        const collection = db.collection('gifts')
+        const collection = db.collection('gifts');
 
-        const gifts = await collection.find().toArray()
+        const gifts = await collection.find().toArray();
 
         // Task 4: return the gifts using the res.json method
         res.status(200).json(gifts);
@@ -23,13 +23,13 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const db = await connectToDatabase()
+        const db = await connectToDatabase();
 
-        const collection = db.collection('gifts')
+        const collection = db.collection('gifts');
 
         const id = req.params.id;
 
-        const gift = await collection.findOne({id: id})
+        const gift = await collection.findOne({id: id});
 
         if (!gift) {
             return res.status(404).send('Gift not found');
